@@ -1,48 +1,48 @@
 public class MainUTF8 {
 
     public static void main (String[] args) {
-        // String with special characters
-        // Found at https://docs.oracle.com/javase/tutorial/java/data/characters.html
+        String testString = "This is a test!";
+        
+        System.out.println("\n## String with special characters");
+        System.out.println("## Found at https://docs.oracle.com/javase/tutorial/java/data/characters.html");
         String special = "\t\b\n\r\f\'\"\\";
 
         decode(special);
 
-        // UTF-8 (encoding of the editor)
-        // To display german umlaut correctly it must be compiled like this:
-        //      javac -encoding UTF-8 MainUTF8.java
+        System.out.println("\n## UTF-8 (encoding of the editor)");
+        System.out.println("## To display german umlaut correctly it must be compiled like this:");
+        System.out.println("##      javac -encoding UTF-8 MainUTF8.java");
         decode("ÄäÖöÜüẞß");
 
-        // german umlaut with unicode notation
+        System.out.println("\n## german umlaut with unicode notation");
         decode("\u00c4\u00e4\u00d6\u00f6\u00dc\u00fc\u1e9e\u00df");
         
-        // some emojis
-        // each built up with more than one unicode characters
+        System.out.println("\n## some emojis");
+        System.out.println("## each built up with more than one unicode character");
         decode("👍😊😂🤣❤😍😒👌");
 
-        // Upper/Lower case on german umlaut. Upper case of small "ß" is "SS"!
+        System.out.println("\n## Upper/Lower case on german umlaut. Upper case of small \"ß\" is \"SS\"!");
         decode("ÄäÖöÜüẞß".toUpperCase());
         decode("\u00c4\u00e4\u00d6\u00f6\u00dc\u00fc\u1e9e\u00df".toLowerCase());
         
-        // Decode the arguments from command line
-        for (String arg : args) decode(arg);
+        System.out.println("\n## Write a method that splits a string with a sentence into words and reverses the order of the words.");
 
-        // Write a method that splits a string with a sentence into words and reverses the order of the words.
+        reverseWordsInSentence(testString);
 
-        reverseWordsInSentence("This is a test!");
+        System.out.println("\n## Write a method that splits a string with a sentence into words and reverses the order of the characters");
+        System.out.println("## in each word while maintaining the order of the words in the sentence.");
 
-        for (String arg : args) reverseWordsInSentence(arg);
+        reverseLettersInWords(testString);
 
-        // Write a method that splits a string with a sentence into words and reverses the order of the characters
-        // in each word while maintaining the order of the words in the sentence.
+        System.out.println("\n## Combinations of reverseLettersInWords and reverseWordsInSentence");
 
-        reverseLettersInWords("This is a test!");
+        reverseLettersInWords(reverseWordsInSentence(testString));
+        reverseWordsInSentence(reverseLettersInWords(testString));
 
-        for (String arg : args) reverseLettersInWords(arg);
+        System.out.println("\n## Double reversed should deliver original string");
 
-        // Combination
-
-        reverseLettersInWords(reverseWordsInSentence("This is a test!"));
-        reverseWordsInSentence(reverseLettersInWords("This is a test!"));
+        reverseLettersInWords(reverseLettersInWords(testString));
+        reverseWordsInSentence(reverseWordsInSentence(testString));
     }
 
     public static void decode(String s) {
@@ -50,7 +50,7 @@ public class MainUTF8 {
         char c;
         char cPrintable;
 
-        System.out.println("\nDecoding String: " + s);
+        System.out.println("\nDecoding String: \"" + s + "\"");
         System.out.println("String has length: " + s.length());
         for (i=0; i < s.length(); i++) {
             c = s.charAt(i);
@@ -66,7 +66,7 @@ public class MainUTF8 {
         int i = sentence.length();
         char c = 0;
 
-        System.out.println("\nOriginal sentence: " + sentence);
+        System.out.println("\nOriginal sentence: \"" + sentence + "\"");
         System.out.print("Sentence with reversed words: ");
 
         while (i > 0) {
@@ -78,16 +78,16 @@ public class MainUTF8 {
             result += sentence.substring(i + 1, endOfWord);
             endOfWord = i + 1;
 
-            while (i > 0 && !Character.isLetter(c)) {
+            while (i >= 0 && !Character.isLetter(c)) {
                 result += sentence.substring(i, endOfWord);
                 endOfWord = i;
 
                 i--;
-                c = sentence.charAt(i);
+                if (i >= 0) c = sentence.charAt(i);
             }
         }
 
-        System.out.println(result);
+        System.out.println("\"" + result + "\"");
         return result;
     }
 
@@ -98,31 +98,31 @@ public class MainUTF8 {
         int i = 0;
         char c = 0;
 
-        System.out.println("\nOriginal sentence: " + sentence);
+        System.out.println("\nOriginal sentence: \"" + sentence + "\"");
         System.out.print("Sentence with reversed letters in words: ");
 
         while (i < length) {
             do {
                 if (i < length) c = sentence.charAt(i);
                 i++;
-            } while (i < length && Character.isLetter(c));
+            } while (i <= length && Character.isLetter(c));
 
-            for (int j = i - 1; j >= startOfWord; j--) {
+            for (int j = i - 2; j >= startOfWord; j--) {
                 result += sentence.charAt(j);
             }
             
             startOfWord = i - 1;
 
-            do {
+             while (i <= length && !Character.isLetter(c)) {
                 result += c;
                 startOfWord = i;
 
                 if (i < length) c = sentence.charAt(i);
                 i++;
-            } while (i <= length && !Character.isLetter(c));
+            }
         }
 
-        System.out.println(result);
+        System.out.println("\"" + result + "\"");
         return result;
     }
 }
